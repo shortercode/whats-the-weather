@@ -1,14 +1,12 @@
 import React from "react";
-import ExampleComp from './components/Example'; // TODO: Replace this with your application code
 import "./App.css";
+import Weather from "./components/Weather";
 
 const App = () => {
 
   return ( // TODO: Replace this with your application code
     <div className="App">
-      <header className="App-header">
-        <ExampleComp />
-      </header>
+      <Weather/>
     </div>
   );
 }

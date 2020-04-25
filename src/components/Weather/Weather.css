@@ -1,0 +1,46 @@
+.weather-widget {
+	text-align: left;
+	font-weight: 600;
+}
+
+.weather-widget__header {
+	text-align: center;
+}
+
+.weather-widget__body {
+	background-color: #453145;
+	padding: 48px;
+}
+
+.weather-widget__body__location {
+	display: block;
+	margin: 16px 0;
+	font-size: 16px; /* should be bold? */
+}
+
+.weather-widget__body__location__input {
+	margin-left: 8px;
+}
+
+.weather-widget__body__result {
+	font-family: Courier New,Courier,Lucida Sans Typewriter,Lucida Typewriter,monospace;
+	
+	border: 2px dashed #7E357E;
+	padding: 16px;
+}
+
+.weather-widget__body__result__header {
+	color: #DEB887;
+	margin: 16px 0;
+}
+
+.weather-widget__body__result__row {
+	font-size: 12px;
+	margin: 10px 0;
+}
+
+.weather-widget__body__update-timer {
+	text-align: right;
+	margin: 16px 0;
+	font-size: 12px;
+}
