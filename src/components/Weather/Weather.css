@@ -44,3 +44,13 @@
 	margin: 16px 0;
 	font-size: 12px;
 }
+
+.weather-widget__history {
+	padding-left: 16px;
+}
+
+.weather-widget__history__item {
+	cursor: pointer;
+	font-size: 16px;
+	margin: 8px 0;
+}

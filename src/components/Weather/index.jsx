@@ -5,6 +5,7 @@ import './Weather.css';
 import UpdateTimer from './UpdateTimer';
 import Message from './Message';
 import Result from './Result';
+import History from './History';
 
 const APP_ID = "";
 const UPDATE_INTERVAL = 60000;
@@ -15,13 +16,7 @@ export default function Weather () {
 	const [lastUpdated, setLastUpdated] = useState(0);
 	const [error, setError] = useState("");
 	const [tempMode, setTempMode] = useState("c");
-
-	useEffect(() => {
-		const opts = {
-			appid: APP_ID, location, interval: UPDATE_INTERVAL
-		};
-		return subscribeWeatherAtLocation(opts, handleWeatherUpdate)
-	}, [location]);
+	const [previousLocations, setPreviousLocations] = useState([]);
 
 	function handleLocationChange (e) {
 		setLocation(e.target.value);
@@ -31,16 +26,49 @@ export default function Weather () {
 		setTempMode(e.target.value);
 	}
 
+	function appendLocationToHistory (location) {
+		const index = previousLocations.indexOf(location);
+
+		if (index > -1) {
+			previousLocations.splice(index, 1);
+			setPreviousLocations([
+				location,
+				...previousLocations
+			]);
+		}
+		else {
+			if (previousLocations.length >= 5) {
+				previousLocations.pop();
+			}
+			setPreviousLocations([
+				location,
+				...previousLocations
+			])
+		}
+	}
+
+	function handleHistoryItemSelected (location) {
+		setLocation(location)
+	}
+
 	function handleWeatherUpdate (result) {
 		if (result.isError()) {
 			setError(result.unwrapErr());
 			return;
 		}
+		appendLocationToHistory(location);
 		setError("");
 		const data = result.unwrap();
 		setLastUpdated(data.time);
 		setWeatherData(data);
 	}
+
+	useEffect(() => {
+		const opts = {
+			appid: APP_ID, location, interval: UPDATE_INTERVAL
+		};
+		return subscribeWeatherAtLocation(opts, handleWeatherUpdate)
+	}, [location]);
 
 	let resultBlock;
 
@@ -64,7 +92,7 @@ export default function Weather () {
 					type="text"
 					value={location}
 					onChange={handleLocationChange}/>
-				<select value={tempMode} onChange={handleTempUnitChange}>
+				<select className="weather-widget__body__location__input" value={tempMode} onChange={handleTempUnitChange}>
 					<option value="f">Fahrenheit</option>
 					<option value="c">Celcius</option>
 					<option value="k">Kelvin</option>
@@ -72,6 +100,7 @@ export default function Weather () {
 			</label>
 			{resultBlock}
 			<UpdateTimer lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
+			<History items={previousLocations} setLocation={handleHistoryItemSelected}/>
 		</div>
 	</div>
 }
