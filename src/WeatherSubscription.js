@@ -1,25 +1,32 @@
+import Result from "./Result";
+
 export default function subscribeWeatherAtLocation ({ appid, location, interval }, handleUpdate) {
 	let abort_callback = null;
 
 	function update () {
 		let shouldUseResult = true;
 
-		fetchWeatherData(appid, location)
-		.then(
-			result => {
-				if (shouldUseResult) { handleUpdate(null, result); }
-			},
-			error => {
-				if (shouldUseResult) { handleUpdate(error, null); }
-			}
-		)
+		if (location === "") {
+			handleUpdate(Result.Err("City not found"));
+		}
+		else {
+			fetchWeatherData(appid, location)
+			.then(
+				data => {
+					if (shouldUseResult) { handleUpdate(data); }
+				},
+				error => {
+					if (shouldUseResult) { handleUpdate(Result.Err("Network request failed")); }
+				}
+			)
+		}
 
 		/*
 			This is our abort handler. We could use 
 			https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 			instead but it might be absent for some users.
 			So instead we wait until the request has finished, then optionally 
-			ignore the result/error if the flag has been cleared by the abort callback. 
+			ignore the data/error if the flag has been cleared by the abort callback. 
 		*/
 
 		return () => {
@@ -46,15 +53,21 @@ function fetchWeatherData (appid, location) {
 }
 
 function processWeatherData (data) {
-	const temperature = data.main?.temp;
-	const pressure = data.main?.pressure;
-	const humidity = data.main?.humidity;
-	const time = Date.now();
+	if (data.cod === "404") {
+		return Result.Err("City not found");
+	}
 
-	return {
-		temperature,
-		pressure,
-		humidity,
-		time
-	};
+	if (typeof data.main === "object") {
+		const temperature = data.main.temp;
+		const pressure = data.main.pressure;
+		const humidity = data.main.humidity;
+		const time = Date.now();
+
+		return Result.Ok({
+			temperature,
+			pressure,
+			humidity,
+			time
+		});
+	}
 }
