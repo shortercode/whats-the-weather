@@ -1,4 +1,5 @@
 import React from "react";
+import { kelvinToCelcius, kelvinToFahrenheit } from "./temperature_utils";
 
 export default function Result ({ weatherData, location, tempMode }) {
 	
@@ -20,17 +21,8 @@ export default function Result ({ weatherData, location, tempMode }) {
 	}
 	return <div className="weather-widget__body__result">
 	<h5 className="weather-widget__body__result__header">{location.toUpperCase()}</h5>
-<div className="weather-widget__body__result__row">{temperature.toFixed(2)} °{tempMode.toUpperCase()}</div>
+	<div className="weather-widget__body__result__row">{temperature.toFixed(2)} °{tempMode.toUpperCase()}</div>
 	<div className="weather-widget__body__result__row">{weatherData.pressure} hpa</div>
 	<div className="weather-widget__body__result__row">{weatherData.humidity} %</div>
 	</div>
-}
-
-
-function kelvinToCelcius (temp) {
-	return temp - 273.15;
-}
-
-function kelvinToFahrenheit (temp) {
-	return kelvinToCelcius(temp) * (9/5) + 32;
 }
