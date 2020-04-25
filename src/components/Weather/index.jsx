@@ -67,9 +67,10 @@ function UpdateTimer({ lastUpdated }) {
 	const [counter, updateCounter] = useState(calculateRemainingTime());
 
 	useEffect(() => {
-		setTimeout(() => {
+		const id = setTimeout(() => {
 			updateCounter(calculateRemainingTime());
 		}, 1000);
+		return () => clearTimeout(id);
 	})
 
 	function calculateRemainingTime () {
