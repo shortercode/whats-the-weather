@@ -1,0 +1,17 @@
+.app-header-container {
+    margin: 2vmax;
+}
+
+.app-logo {
+    height: 20vmin;
+    pointer-events: none;
+}
+
+.app-header-code {
+    text-align: left;
+    background-color: rgba(0,0,0,0.5);
+    padding: 1em;
+    border: 2px dashed #eee;
+}
+
+/* TODO: Write required component styles here */
