@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-// import logo from "./logo.png";
+
 import subscribeWeatherAtLocation from "../../WeatherSubscription";
-import './Weather.css';
+
 import UpdateTimer from './UpdateTimer';
 import Message from './Message';
 import Result from './Result';
 import History from './History';
 
-const APP_ID = "";
+import './Weather.css';
+
+const APP_ID = "f148b96f829bc3f40cb9c4dfe5e6a183";
 const UPDATE_INTERVAL = 60000;
 
 export default function Weather () {
@@ -47,27 +49,29 @@ export default function Weather () {
 		}
 	}
 
-	function handleHistoryItemSelected (location) {
-		setLocation(location)
-	}
-
-	function handleWeatherUpdate (result) {
-		if (result.isError()) {
-			setError(result.unwrapErr());
-			return;
-		}
-		appendLocationToHistory(location);
-		setError("");
-		const data = result.unwrap();
-		setLastUpdated(data.time);
-		setWeatherData(data);
-	}
-
 	useEffect(() => {
+
 		const opts = {
-			appid: APP_ID, location, interval: UPDATE_INTERVAL
+			appid: APP_ID,
+			location,
+			interval: UPDATE_INTERVAL
 		};
-		return subscribeWeatherAtLocation(opts, handleWeatherUpdate)
+
+		return subscribeWeatherAtLocation(opts, (result) => {
+			if (result.isError()) {
+				setError(result.unwrapErr());
+				return;
+			}
+			// NOTE this incorrectly trigger a linter warning, if it's included in the
+			// dependecy array it will trigger a resubscription each render instead of
+			// when the location changes 
+			appendLocationToHistory(location);
+			setError("");
+			const data = result.unwrap();
+			setLastUpdated(data.time);
+			setWeatherData(data);
+		})
+		
 	}, [location]);
 
 	let resultBlock;
@@ -100,7 +104,7 @@ export default function Weather () {
 			</label>
 			{resultBlock}
 			<UpdateTimer lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
-			<History items={previousLocations} setLocation={handleHistoryItemSelected}/>
+			<History items={previousLocations} setLocation={setLocation}/>
 		</div>
 	</div>
 }
