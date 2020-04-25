@@ -19,7 +19,7 @@ What you need to do
 
 3. Prioritise and resolve the list of missing features that are required to build this application. These are (in no particular order):
     - [x] Update any out of date packages
-    - [] Fetch and display the weather for a user entered location (city name)
+    - [x] Fetch and display the weather for a user entered location (city name)
     - [] When a location is chosen, it should refresh the weather data every 1 minute
     - [] Count down how long since the last refresh and time to the next refresh
     - [] Toggle temperate between Kelvin and degrees Celsius
