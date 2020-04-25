@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import subscribeWeatherAtLocation from "../../WeatherSubscription";
+import { debounceCaller } from "../../debounce";
 
 import UpdateTimerComponent from './UpdateTimer';
 import MessageComponent from './Message';
@@ -12,16 +13,22 @@ import './Weather.css';
 const APP_ID = "f148b96f829bc3f40cb9c4dfe5e6a183";
 const UPDATE_INTERVAL = 60000;
 
+const debouncedLocationHandler = debounceCaller(2000);
+
 export default function Weather () {
 	const [location, setLocation] = useState("London");
+	const [locationLabel, setLocationLabel] = useState(location);
 	const [weatherData, setWeatherData] = useState(null);
 	const [lastUpdated, setLastUpdated] = useState(0);
-	const [error, setError] = useState("");
-	const [tempMode, setTempMode] = useState("c");
+	const [errorMessage, setError] = useState("");
+	const [temperatureMode, setTempMode] = useState("c");
 	const [previousLocations, setPreviousLocations] = useState([]);
 
-	function handleLocationChange (e) {
-		setLocation(e.target.value);
+	function handleLocationChange(value) {
+		// NOTE as we're debouncing the update we have to use a seperate
+		// piece of state to hold the value of the input
+		setLocationLabel(value);
+		debouncedLocationHandler(value => setLocation(value), value);
 	}
 
 	function handleTempUnitChange (e) {
@@ -76,11 +83,11 @@ export default function Weather () {
 
 	let resultBlock;
 
-	if (error) {
-		resultBlock = <MessageComponent text={error}/>
+	if (errorMessage) {
+		resultBlock = <MessageComponent text={errorMessage}/>
 	}
 	else if (weatherData) {
-		resultBlock = <ResultComponent location={location} tempMode={tempMode} weatherData={weatherData}/>
+		resultBlock = <ResultComponent location={location} tempMode={temperatureMode} weatherData={weatherData}/>
 	}
 	else {
 		resultBlock = <MessageComponent text="loading"/>
@@ -94,9 +101,9 @@ export default function Weather () {
 				<input 
 					className="weather-widget__body__location__input"
 					type="text"
-					value={location}
-					onChange={handleLocationChange}/>
-				<select className="weather-widget__body__location__input" value={tempMode} onChange={handleTempUnitChange}>
+					value={locationLabel}
+					onChange={e => handleLocationChange(e.target.value)}/>
+				<select className="weather-widget__body__location__input" value={temperatureMode} onChange={handleTempUnitChange}>
 					<option value="f">Fahrenheit</option>
 					<option value="c">Celcius</option>
 					<option value="k">Kelvin</option>
@@ -104,7 +111,7 @@ export default function Weather () {
 			</label>
 			{resultBlock}
 			<UpdateTimerComponent lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
-			<HistoryComponent items={previousLocations} setLocation={setLocation}/>
+			<HistoryComponent items={previousLocations} setLocation={handleLocationChange}/>
 		</div>
 	</div>
 }
