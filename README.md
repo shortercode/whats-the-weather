@@ -27,7 +27,7 @@ What you need to do
     - [x] Make it so when the user queries another location, the previous one stays in a sidebar as a history (up to 5 locations)
     - [X] Style the application as close to the spec as possible (see [src/data/spec.png](./src/data/spec.png))
     - [X] Handle errors when an incorrect location is chosen
-    - [] Write at least one test for your code
+    - [x] Write at least one test for your code
 
 4. Write tests to test your code. An example can be found for each component in  `*.test.js` files. To run your tests:
   ```npm test```
