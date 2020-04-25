@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 // import logo from "./logo.png";
 import subscribeWeatherAtLocation from "../../WeatherSubscription";
 import './Weather.css';
+import UpdateTimer from './UpdateTimer';
+import Message from './Message';
+import Result from './Result';
 
 const APP_ID = "";
-const UPDATE_INTERVAL = 30000;
+const UPDATE_INTERVAL = 60000;
 
 export default function Weather () {
 	const [location, setLocation] = useState("London");
@@ -58,51 +61,7 @@ export default function Weather () {
 					onChange={updateLocation}/>
 			</label>
 			{resultBlock}
-			<UpdateTimer lastUpdated={lastUpdated}/>
+			<UpdateTimer lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
 		</div>
-	</div>
-}
-
-function UpdateTimer({ lastUpdated }) {
-	const [counter, updateCounter] = useState(calculateRemainingTime());
-
-	useEffect(() => {
-		const id = setTimeout(() => {
-			updateCounter(calculateRemainingTime());
-		}, 1000);
-		return () => clearTimeout(id);
-	})
-
-	function calculateRemainingTime () {
-		const now = Date.now();
-		const delta = now - lastUpdated;
-		return Math.floor((UPDATE_INTERVAL - delta) / 1000);
-	}
-
-	let minutes = 0;
-	let seconds = 0;
-
-	if (counter > 0) { 
-		minutes = Math.floor(counter / 60);
-		seconds = counter % 60;
-	}
-
-	return <div className="weather-widget__body__update-timer">
-		Refreshing in {minutes}m {seconds}s
-	</div>
-}
-
-function Message ({ text }) {
-	return <div className="weather-widget__body__result">
-		{text}
-	</div>
-}
-
-function Result ({ weatherData, location }) {
-	return <div className="weather-widget__body__result">
-		<h5 className="weather-widget__body__result__header">{location.toUpperCase()}</h5>
-		<div className="weather-widget__body__result__row">{weatherData.temperature} °K</div>
-		<div className="weather-widget__body__result__row">{weatherData.pressure} hpa</div>
-		<div className="weather-widget__body__result__row">{weatherData.humidity} %</div>
 	</div>
 }
