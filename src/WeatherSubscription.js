@@ -13,7 +13,10 @@ export default function subscribeWeatherAtLocation ({ appid, location, interval 
 			fetchWeatherData(appid, location)
 			.then(
 				data => {
-					if (shouldUseResult) { handleUpdate(data); }
+					if (shouldUseResult) {
+						handleUpdate(data);
+						setTimeout(update, interval)
+					}
 				},
 				error => {
 					if (shouldUseResult) { handleUpdate(Result.Err("Network request failed")); }
