@@ -1,10 +1,10 @@
-export default function useWeatherSubscription ({ appid, location, interval }, handleUpdate) {
+export default function subscribeWeatherAtLocation ({ appid, location, interval }, handleUpdate) {
 	let abort_callback = null;
 
 	function update () {
 		let shouldUseResult = true;
 
-		fetchWeatherData()
+		fetchWeatherData(appid, location)
 		.then(
 			result => {
 				if (shouldUseResult) { handleUpdate(null, result); }
@@ -38,17 +38,23 @@ export default function useWeatherSubscription ({ appid, location, interval }, h
 }
 
 function fetchWeatherData (appid, location) {
-	return fetch('https://api.openweathermap.org/data/2.5/weather', {
-		body: JSON.stringify({
-			appid: appid,
-			q: location
-		})
-	})
+	const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${appid}`;
+	
+	return fetch(url)
 	.then(res => res.json())
 	.then(processWeatherData);
 }
 
 function processWeatherData (data) {
-	console.log(data);
-	return data;
+	const temperature = data.main?.temp;
+	const pressure = data.main?.pressure;
+	const humidity = data.main?.humidity;
+	const time = Date.now();
+
+	return {
+		temperature,
+		pressure,
+		humidity,
+		time
+	};
 }
