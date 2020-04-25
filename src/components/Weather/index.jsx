@@ -14,6 +14,7 @@ export default function Weather () {
 	const [weatherData, setWeatherData] = useState(null);
 	const [lastUpdated, setLastUpdated] = useState(0);
 	const [error, setError] = useState("");
+	const [tempMode, setTempMode] = useState("c");
 
 	useEffect(() => {
 		const opts = {
@@ -43,7 +44,7 @@ export default function Weather () {
 		resultBlock = <Message text={error}/>
 	}
 	else if (weatherData) {
-		resultBlock = <Result location={location} weatherData={weatherData}/>
+		resultBlock = <Result location={location} tempMode={tempMode} weatherData={weatherData}/>
 	}
 	else {
 		resultBlock = <Message text="loading"/>
