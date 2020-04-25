@@ -13,7 +13,7 @@ import './Weather.css';
 const APP_ID = "f148b96f829bc3f40cb9c4dfe5e6a183";
 const UPDATE_INTERVAL = 60000;
 
-const debouncedLocationHandler = debounceCaller(2000);
+const debouncedLocationHandler = debounceCaller(1000);
 
 export default function Weather () {
 	const [location, setLocation] = useState("London");
@@ -35,27 +35,6 @@ export default function Weather () {
 		setTempMode(e.target.value);
 	}
 
-	function appendLocationToHistory (location) {
-		const index = previousLocations.indexOf(location);
-
-		if (index > -1) {
-			previousLocations.splice(index, 1);
-			setPreviousLocations([
-				location,
-				...previousLocations
-			]);
-		}
-		else {
-			if (previousLocations.length >= 5) {
-				previousLocations.pop();
-			}
-			setPreviousLocations([
-				location,
-				...previousLocations
-			])
-		}
-	}
-
 	useEffect(() => {
 
 		const opts = {
@@ -65,14 +44,28 @@ export default function Weather () {
 		};
 
 		return subscribeWeatherAtLocation(opts, (result) => {
+
 			if (result.isError()) {
 				setError(result.unwrapErr());
 				return;
 			}
-			// NOTE this incorrectly trigger a linter warning, if it's included in the
-			// dependecy array it will trigger a resubscription each render instead of
-			// when the location changes 
-			appendLocationToHistory(location);
+
+			setPreviousLocations(locations => {
+				const index = locations.indexOf(location);
+
+				if (index > -1) {
+					locations.splice(index, 1);
+				}
+				else if (locations.length >= 5) {
+					locations.pop();
+				}
+					
+				setPreviousLocations( [
+					location,
+					...locations
+				]);
+			});
+
 			setError("");
 			const data = result.unwrap();
 			setLastUpdated(data.time);
