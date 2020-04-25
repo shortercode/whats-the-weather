@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import subscribeWeatherAtLocation from "../../WeatherSubscription";
 
-import UpdateTimer from './UpdateTimer';
-import Message from './Message';
-import Result from './Result';
-import History from './History';
+import UpdateTimerComponent from './UpdateTimer';
+import MessageComponent from './Message';
+import ResultComponent from './Result';
+import HistoryComponent from './History';
 
 import './Weather.css';
 
@@ -77,13 +77,13 @@ export default function Weather () {
 	let resultBlock;
 
 	if (error) {
-		resultBlock = <Message text={error}/>
+		resultBlock = <MessageComponent text={error}/>
 	}
 	else if (weatherData) {
-		resultBlock = <Result location={location} tempMode={tempMode} weatherData={weatherData}/>
+		resultBlock = <ResultComponent location={location} tempMode={tempMode} weatherData={weatherData}/>
 	}
 	else {
-		resultBlock = <Message text="loading"/>
+		resultBlock = <MessageComponent text="loading"/>
 	}
 
 	return <div className="weather-widget">
@@ -103,8 +103,8 @@ export default function Weather () {
 				</select>
 			</label>
 			{resultBlock}
-			<UpdateTimer lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
-			<History items={previousLocations} setLocation={setLocation}/>
+			<UpdateTimerComponent lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
+			<HistoryComponent items={previousLocations} setLocation={setLocation}/>
 		</div>
 	</div>
 }
