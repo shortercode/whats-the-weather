@@ -15,7 +15,11 @@ export default function subscribeWeatherAtLocation ({ appid, location, interval 
 				data => {
 					if (shouldUseResult) {
 						handleUpdate(data);
-						setTimeout(update, interval)
+						setTimeout(() => {
+							if (shouldUseResult) {
+								update();
+							}
+						}, interval);
 					}
 				},
 				error => {
