@@ -48,6 +48,14 @@ function fetchWeatherData (appid, location) {
 	const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${appid}`;
 	
 	return fetch(url)
+	.then(res => {
+		if (res.ok || res.status === 404) {
+			return res;
+		}
+		else {
+			throw new Error(res.statusText);
+		}
+	})
 	.then(res => res.json())
 	.then(processWeatherData);
 }
