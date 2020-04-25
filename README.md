@@ -20,13 +20,13 @@ What you need to do
 3. Prioritise and resolve the list of missing features that are required to build this application. These are (in no particular order):
     - [x] Update any out of date packages
     - [x] Fetch and display the weather for a user entered location (city name)
-    - [] When a location is chosen, it should refresh the weather data every 1 minute
-    - [] Count down how long since the last refresh and time to the next refresh
-    - [] Toggle temperate between Kelvin and degrees Celsius
-    - [] Track your changes using git
-    - [] Make it so when the user queries another location, the previous one stays in a sidebar as a history (up to 5 locations)
+    - [X] When a location is chosen, it should refresh the weather data every 1 minute
+    - [X] Count down how long since the last refresh and time to the next refresh
+    - [x] Toggle temperate between Kelvin and degrees Celsius
+    - [X] Track your changes using git
+    - [x] Make it so when the user queries another location, the previous one stays in a sidebar as a history (up to 5 locations)
     - [X] Style the application as close to the spec as possible (see [src/data/spec.png](./src/data/spec.png))
-    - [] Handle errors when an incorrect location is chosen
+    - [X] Handle errors when an incorrect location is chosen
     - [] Write at least one test for your code
 
 4. Write tests to test your code. An example can be found for each component in  `*.test.js` files. To run your tests:
