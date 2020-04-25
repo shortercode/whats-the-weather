@@ -23,8 +23,12 @@ export default function Weather () {
 		return subscribeWeatherAtLocation(opts, handleWeatherUpdate)
 	}, [location]);
 
-	function updateLocation (e) {
+	function handleLocationChange (e) {
 		setLocation(e.target.value);
+	}
+
+	function handleTempUnitChange (e) {
+		setTempMode(e.target.value);
 	}
 
 	function handleWeatherUpdate (result) {
@@ -59,7 +63,12 @@ export default function Weather () {
 					className="weather-widget__body__location__input"
 					type="text"
 					value={location}
-					onChange={updateLocation}/>
+					onChange={handleLocationChange}/>
+				<select value={tempMode} onChange={handleTempUnitChange}>
+					<option value="f">Fahrenheit</option>
+					<option value="c">Celcius</option>
+					<option value="k">Kelvin</option>
+				</select>
 			</label>
 			{resultBlock}
 			<UpdateTimer lastUpdated={lastUpdated} interval={UPDATE_INTERVAL}/>
