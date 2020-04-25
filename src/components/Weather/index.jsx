@@ -4,11 +4,12 @@ import subscribeWeatherAtLocation from "../../WeatherSubscription";
 import './Weather.css';
 
 const APP_ID = "";
-const UPDATE_INTERVAL = 5000;
+const UPDATE_INTERVAL = 30000;
 
 export default function Weather () {
 	const [location, setLocation] = useState("London");
 	const [weatherData, setWeatherData] = useState(null);
+	const [lastUpdated, setLastUpdated] = useState(0);
 	const [error, setError] = useState("");
 
 	useEffect(() => {
@@ -28,7 +29,9 @@ export default function Weather () {
 			return;
 		}
 		setError("");
-		setWeatherData(result.unwrap());
+		const data = result.unwrap();
+		setLastUpdated(data.time);
+		setWeatherData(data);
 	}
 
 	let resultBlock;
@@ -55,10 +58,36 @@ export default function Weather () {
 					onChange={updateLocation}/>
 			</label>
 			{resultBlock}
-			<div className="weather-widget__body__update-timer">
-				Refreshing in 1m 5s
-			</div>
+			<UpdateTimer lastUpdated={lastUpdated}/>
 		</div>
+	</div>
+}
+
+function UpdateTimer({ lastUpdated }) {
+	const [counter, updateCounter] = useState(calculateRemainingTime());
+
+	useEffect(() => {
+		setTimeout(() => {
+			updateCounter(calculateRemainingTime());
+		}, 1000);
+	})
+
+	function calculateRemainingTime () {
+		const now = Date.now();
+		const delta = now - lastUpdated;
+		return Math.floor((UPDATE_INTERVAL - delta) / 1000);
+	}
+
+	let minutes = 0;
+	let seconds = 0;
+
+	if (counter > 0) { 
+		minutes = Math.floor(counter / 60);
+		seconds = counter % 60;
+	}
+
+	return <div className="weather-widget__body__update-timer">
+		Refreshing in {minutes}m {seconds}s
 	</div>
 }
 
